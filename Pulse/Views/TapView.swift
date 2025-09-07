@@ -1,24 +1,27 @@
 
+
 import SwiftUI
 
-func test(data: PulseData) -> String {
-    return String(data.t0)
-}
-
-struct ContentView: View {
+struct TapView: View {
     
     var data = PulseData()
     @State var text = "0"
     
     var body: some View {
+        
         VStack {
             Button {
-                let t = Float(DispatchTime.now().uptimeNanoseconds)
+                let t = Double(DispatchTime.now().uptimeNanoseconds)
                 data.append(t: t)
-                if data.time.count > 0 {
-                    text = String(data.time[data.time.count-1])
-                }
+                data.compute_rate()
                 print(data.time)
+                
+                if data.rates.count > 0 {
+                    text = String(format: "%.1f", data.rates[data.rates.count-1])
+                } else {
+                    text = "0"
+                }
+                
                 
             } label: {
                 Text("Pulse")
@@ -37,5 +40,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    TapView()
+        .preferredColorScheme(.dark)
 }
